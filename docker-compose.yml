@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel_app
+        working_dir: /var/www
+        volumes:
+            - .:/var/www
+        ports:
+            - "9000:80"
+        networks:
+            - app-network
+        environment:
+            DB_CONNECTION: sqlsrv
+            DB_HOST: host.docker.internal\SQLEXPRESS
+            DB_PORT: 1433
+            DB_DATABASE: safeapi
+            DB_USERNAME: sa
+            DB_PASSWORD: 1234
+
+networks:
+    app-network:
+        driver: bridge
