@@ -39,7 +39,7 @@ El archivo `safeapi.sql` es un script de base de datos que puedes usar para crea
 ### 2. **Obtener información de todos los usuarios**
 - **Método**: `GET`
 - **Ruta**: `/api/infoall`
-- **Descripción**: Obtiene información detallada de todos los usuarios.
+- **Descripción**: Obtiene información de los usuarios (usando tokens de usuarios sin admin).
 - **Autenticación requerida**: Sí, necesita un Bearer Token.
 
 ### 3. **Obtener usuarios en la papelera**
@@ -63,7 +63,7 @@ El archivo `safeapi.sql` es un script de base de datos que puedes usar para crea
 ### 6. **Obtener información de un recurso específico**
 - **Método**: `GET`
 - **Ruta**: `/api/info/{id}`
-- **Descripción**: Obtiene información detallada sobre un recurso específico de usuario.
+- **Descripción**: Obtiene información detallada sobre un usuario (usando tokens de usuarios sin admin y solo sobre el usuario registrado en el momento).
 - **Autenticación requerida**: Sí, necesita un Bearer Token.
 
 ### 7. **Obtener un usuario específico de la papelera**
@@ -172,6 +172,8 @@ El archivo `safeapi.sql` es un script de base de datos que puedes usar para crea
 Todas las rutas de la API, excepto **`POST /api/login`** y **`POST /api/register`**, requieren un **Bearer Token** en el encabezado de la solicitud para poder ser utilizadas.
 
 Los tokens son entregados cada que un usuario se registra o inicia sesion.
+
+La mayoria de las rutas necesitan un token de admin solo pocas rutas son accesible por tokens de usuario.
 
 ### Autor
 Javier Choque Flores
