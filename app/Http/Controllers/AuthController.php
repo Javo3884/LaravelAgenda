@@ -13,8 +13,8 @@ class AuthController extends Controller
     /**
      * Registra un nuevo usuario y retorna un token de acceso.
      *
-     @param  \Illuminate\Http\Request  $request
-     @return \Illuminate\Http\Response
+    @param  \Illuminate\Http\Request  $request
+    @return \Illuminate\Http\Response
      */
     public function register(Request $request)
     {
@@ -32,6 +32,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors(),
+                'message' => $validator->errors(),
                 "success" => false,
             ], 422);
         }
@@ -69,13 +70,21 @@ class AuthController extends Controller
             'password' => 'required|string|min:2',    // Contraseña del usuario
         ]);
 
+        // Verificar si el correo electrónico existe
+        if (!User::where('email', $request->email)->exists()) {
+            return response()->json([
+                'message' => 'Correo electrónico inválido',
+                "success" => false,
+            ], 404);
+        }
         // Buscar el usuario por correo electrónico
         $user = User::where('email', $request->email)->first();
+
 
         // Verificar que el usuario existe y que la contraseña es correcta
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'error' => 'Credenciales inválidas',
+                'message' => 'Contraseña incorrecta',
                 "success" => false,
             ], 401);
         }
