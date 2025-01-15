@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum',"IsAdmin")->group(function () {
 
     Route::post('users', [UserController::class, 'Create']); // Crear un nuevo usuario
     Route::put('users/{id}', [UserController::class, 'Update']); // Actualizar un usuario existente
-    Route::put('users/restore/{id}', [UserController::class, 'Restore']); // Restaurar un usuario eliminado
+    Route::post('users/restore/{id}', [UserController::class, 'Restore']); // Restaurar un usuario eliminado
 
     Route::delete('users/{id}', [UserController::class, 'Delete']); // Eliminar un usuario (Soft Delete)
     Route::delete('users/force-delete/{id}', [UserController::class, 'ForceDelete']); // Eliminar un usuario permanentemente (Hard Delete)

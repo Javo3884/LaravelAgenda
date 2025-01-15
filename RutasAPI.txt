@@ -1,0 +1,75 @@
+GET http://10.10.160.112:8888/api/users
+Require: Bearer Token of an admin
+
+GET http://10.10.160.112:8888/api/infoall
+Require: Bearer Token of an user
+
+GET http://10.10.160.112:8888/api/trash
+Require: Admin Bearer Token
+
+GET http://10.10.160.112:8888/api/with-trash
+Require: Admin Bearer Token
+
+GET http://10.10.160.112:8888/api/users/5
+Require: Admin Bearer Token
+
+GET http://10.10.160.112:8888/api/info/6
+Require: User Bearer Token
+
+GET http://10.10.160.112:8888/api/trash/5
+Require: Admin Bearer Token
+
+POST http://10.10.160.112:8888/api/users
+{
+"name": "melisa123",
+"email": "melisa123@example.com",
+"password": "melisa123",
+"password_confirmation": "melisa123",
+"rol": "Editor",
+"telefono": "123123123",
+"admin": "1",
+"anexo": "7777",
+"estado": "activo"
+}
+Require: Admin Bearer Token
+
+PUT http://10.10.160.112:8888/api/users/10
+{
+"name": "Juan Pérez",
+"email": "juan.perez@example.com",
+"password": "nueva123",
+"password_confirmation": "nueva123",
+"rol": "Super Admin",
+"telefono": "1122334455",
+"anexo": "5555"
+}
+Require: Admin Bearer Token
+
+PUT http://10.10.160.112:8888/api/users/restore/5
+Require: Admin Bearer Token
+
+DEL http://10.10.160.112:8888/api/users/5
+Require: Admin Bearer Token
+
+DEL http://10.10.160.112:8888/api/users/force-delete/4
+Require: Admin Bearer Token
+
+POST http://10.10.160.112:8888/api/login
+{
+"email": "almendra@gmail.com",
+"password": "almendra"
+}
+
+POST http://10.10.160.112:8888/api/logout
+Require: Bearer Token
+
+POST http://10.10.160.112:8888/api/register
+{
+"name": "almendra",
+"email": "almendra@gmail.com",
+"password": "almendra",
+"password_confirmation": "almendra",
+"rol": "Editor",
+"telefono": "123123123",
+"anexo": "1234"
+}
