@@ -32,7 +32,8 @@ class UserController extends Controller
         $user = User::find($id); // Solo busca usuarios que no estén eliminados
 
         if (!$user) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+            return response()->json(['message' => 'Usuario no encontrado',
+                'success' => false], 404);
         }
 
         return response()->json(["success" => true,"user" =>$user]);
@@ -44,7 +45,7 @@ class UserController extends Controller
         $user = User::onlyTrashed()->find($id); // Busca entre los eliminados
 
         if (!$user) {
-            return response()->json(['error' => 'Usuario eliminado no encontrado'], 404);
+            return response()->json(['message' => 'Usuario eliminado no encontrado'], 404);
         }
 
         return response()->json(["success" => true,"user" =>$user]);
@@ -64,7 +65,8 @@ class UserController extends Controller
         $user = User::withTrashed()->find($id); // Incluye eliminados
 
         if (!$user) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+            return response()->json(['message' => 'Usuario no encontrado',
+                'success' => false], 404);
         }
 
         // Restaurar el usuario
@@ -89,7 +91,8 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
+            return response()->json(['message' => $validator->errors(),
+                'success' => false], 422);
         }
 
         // Crear el usuario
@@ -104,7 +107,8 @@ class UserController extends Controller
             'anexo' => $request->anexo,
         ]);
 
-        return response()->json(['message' => 'Usuario creado exitosamente', 'user' => $user], 201);
+        return response()->json(['message' => 'Usuario creado exitosamente', 'user' => $user,
+            'success' => true], 201);
     }
 
     // Actualizar un usuario existente
@@ -113,7 +117,8 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+            return response()->json(['message' => 'Usuario no encontrado',
+                'success' => false], 404);
         }
 
         // Validación de los datos
@@ -129,7 +134,9 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
+            return response()->json(['error' => $validator->errors(),
+                'success' => false,
+                'message' => 'los valores ingresados no son validos'], 422);
         }
 
 
@@ -145,7 +152,8 @@ class UserController extends Controller
             'anexo' => $request->anexo ?? $user->anexo,
         ]);
 
-        return response()->json(['message' => 'Usuario actualizado exitosamente', 'user' => $user]);
+        return response()->json(['message' => 'Usuario actualizado exitosamente', 'user' => $user,
+            'success' => true]);
     }
 
     // Eliminar un usuario (Soft Delete)
@@ -154,13 +162,15 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+            return response()->json(['message' => 'Usuario no encontrado',
+                'success' => false], 404);
         }
 
         // Realizar Soft Delete
         $user->delete();
 
-        return response()->json(['message' => 'Usuario eliminado exitosamente']);
+        return response()->json(['message' => 'Usuario eliminado exitosamente',
+            'success' => true]);
     }
 
     // Eliminar un usuario permanentemente (Hard Delete)
@@ -169,12 +179,14 @@ class UserController extends Controller
         $user = User::withTrashed()->find($id); // Incluye los eliminados
 
         if (!$user) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+            return response()->json(['message' => 'Usuario no encontrado',
+                'success' => true], 404);
         }
 
         // Eliminar permanentemente
         $user->forceDelete();
 
-        return response()->json(['message' => 'Usuario eliminado permanentemente']);
+        return response()->json(['message' => 'Usuario eliminado permanentemente',
+            'success' => true]);
     }
 }
