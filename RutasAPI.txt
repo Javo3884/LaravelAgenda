@@ -45,7 +45,7 @@ PUT http://10.10.160.112:8888/api/users/10
 }
 Require: Admin Bearer Token
 
-PUT http://10.10.160.112:8888/api/users/restore/5
+POST http://10.10.160.112:8888/api/users/restore/5
 Require: Admin Bearer Token
 
 DEL http://10.10.160.112:8888/api/users/5

@@ -111,7 +111,7 @@ El archivo `safeapi.sql` es un script de base de datos que puedes usar para crea
 - **Autenticación requerida**: Sí, necesita un Bearer Token.
 
 ### 10. **Restaurar un usuario de la papelera**
-- **Método**: `PUT`
+- **Método**: `POST`
 - **Ruta**: `/api/users/restore/{id}`
 - **Descripción**: Restaura un usuario desde la papelera a su estado original.
 - **Autenticación requerida**: Sí, necesita un Bearer Token.
