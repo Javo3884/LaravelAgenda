@@ -126,6 +126,59 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function updateInfo(Request $request, $id)
+    {
+        // Obtener el usuario autenticado
+        $authenticatedUser = $request->user();
+
+        // Verificar si el ID del usuario autenticado coincide con el ID solicitado
+        if ($authenticatedUser->id != $id) {
+            return response()->json([
+                'message' => 'Usuario no autorizado.',
+                'success' => false,
+                'error' => 'Acceso no autorizado. Este recurso no pertenece al usuario autenticado.',
+            ], 403); // Código HTTP 403: Forbidden
+        }
+
+        // Validación de los datos enviados
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|max:100',
+            'email' => 'nullable|string|email|max:150|unique:users,email,' . $authenticatedUser->id,
+            'password' => 'nullable|string|min:8|confirmed', // Confirmación de la nueva contraseña
+            'telefono' => 'nullable|string|max:20',
+            'anexo' => 'nullable|string|max:20',
+        ]);
+
+        // Si la validación falla, se retorna un mensaje con los errores
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+                'message' => $validator->errors(),
+                'success' => false,
+            ], 422);
+        }
+
+        // Actualizar los datos del usuario autenticado
+        $authenticatedUser->name = $request->name ?? $authenticatedUser->name;
+        $authenticatedUser->email = $request->email ?? $authenticatedUser->email;
+        if ($request->password) {
+            $authenticatedUser->password = Hash::make($request->password);
+        }
+        $authenticatedUser->telefono = $request->telefono ?? $authenticatedUser->telefono;
+        $authenticatedUser->anexo = $request->anexo ?? $authenticatedUser->anexo;
+
+        // Guardar los cambios
+        $authenticatedUser->save();
+
+        // Respuesta con la información actualizada
+        return response()->json([
+            'success' => true,
+            'message' => 'Información actualizada exitosamente.',
+            'user' => $authenticatedUser,
+        ], 200);
+    }
+
+
     public function getUser(Request $request)
     {
         // Obtiene al usuario autenticado mediante el token
