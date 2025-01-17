@@ -13,18 +13,41 @@ class UserController extends Controller
     // Obtener todos los usuarios NO eliminados (SoftDelete)
     public function GetAll()
     {
-        // Solo los usuarios NO eliminados (sin soft delete)
-        $users = User::all();
-        return response()->json(["success" => true,"users" =>$users]);
+        // Definir cuántos usuarios por página
+        $perPage = 10;  // Puedes hacer esto configurable si es necesario
+
+        // Paginar los usuarios (no eliminados)
+        $users = User::paginate($perPage);
+
+        // Retornar los usuarios con la información de la paginación
+        return response()->json([
+            "success" => true,
+            "users" => $users->items(),  // Los usuarios actuales de la página
+            "current_page" => $users->currentPage(),
+            "total_pages" => $users->lastPage(),
+            "total_users" => $users->total(),
+        ]);
     }
 
     // Buscar usuarios eliminados (Soft Deleted)
     public function FindAllTrash()
     {
-        // Solo los usuarios que han sido eliminados (soft delete)
-        $users = User::onlyTrashed()->get();
-        return response()->json(["success" => true,"users" =>$users]);
+        // Definir cuántos usuarios por página
+        $perPage = 10;  // Puedes hacer esto configurable si es necesario
+
+        // Obtener los usuarios eliminados (soft delete) y paginarlos
+        $users = User::onlyTrashed()->paginate($perPage);
+
+        // Retornar los usuarios con la información de la paginación
+        return response()->json([
+            "success" => true,
+            "users" => $users->items(),  // Los usuarios actuales de la página
+            "current_page" => $users->currentPage(),
+            "total_pages" => $users->lastPage(),
+            "total_users" => $users->total(),
+        ]);
     }
+
 
     // Obtener un usuario por ID que no esté eliminado
     public function FindById($id)
@@ -54,10 +77,22 @@ class UserController extends Controller
     // Buscar todos los usuarios, incluyendo eliminados (Soft Deleted)
     public function FindWithTrash()
     {
-        // Todos los usuarios, incluidos los eliminados (soft delete)
-        $users = User::withTrashed()->get();
-        return response()->json(["success" => true,"users" =>$users]);
+        // Definir cuántos usuarios por página
+        $perPage = 10;  // Puedes hacer esto configurable si es necesario
+
+        // Obtener todos los usuarios, incluyendo los eliminados (soft delete), y paginarlos
+        $users = User::withTrashed()->paginate($perPage);
+
+        // Retornar los usuarios con la información de la paginación
+        return response()->json([
+            "success" => true,
+            "users" => $users->items(),  // Los usuarios actuales de la página
+            "current_page" => $users->currentPage(),
+            "total_pages" => $users->lastPage(),
+            "total_users" => $users->total(),
+        ]);
     }
+
 
     // Restaurar un usuario eliminado (Soft Delete)
     public function Restore($id)

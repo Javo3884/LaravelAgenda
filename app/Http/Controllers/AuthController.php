@@ -178,9 +178,11 @@ class AuthController extends Controller
         ], 200);
     }
 
-
     public function getUser(Request $request)
     {
+        // Definir cuántos usuarios por página
+        $perPage = 10;  // Puedes hacer esto configurable si es necesario
+
         // Obtiene al usuario autenticado mediante el token
         $authenticatedUser = auth('sanctum')->user();
 
@@ -189,8 +191,11 @@ class AuthController extends Controller
             return response()->json(["success" => false, "message" => "Token inválido o usuario no autenticado."], 401);
         }
 
-        // Recupera y formatea los usuarios
-        $users = User::all()->map(function ($user) {
+        // Recupera y pagina los usuarios (no eliminados)
+        $users = User::paginate($perPage);
+
+        // Mapea los usuarios para devolver solo los campos necesarios
+        $usersFormatted = $users->getCollection()->map(function ($user) {
             return [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -200,12 +205,18 @@ class AuthController extends Controller
             ];
         });
 
-        // Devuelve los datos formateados
+        // Devuelve los datos formateados junto con la información de paginación
         return response()->json([
             "success" => true,
-            "users" => $users
+            "users" => $usersFormatted,               // Lista de usuarios actualizada
+            "current_page" => $users->currentPage(),  // Página actual
+            "total_pages" => $users->lastPage(),      // Total de páginas
+            "total_users" => $users->total(),         // Total de usuarios
+            "per_page" => $users->perPage(),          // Usuarios por página
         ]);
     }
+
+
 
     public function logout(Request $request)
     {
