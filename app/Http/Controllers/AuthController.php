@@ -191,8 +191,17 @@ class AuthController extends Controller
             return response()->json(["success" => false, "message" => "Token inválido o usuario no autenticado."], 401);
         }
 
-        // Recupera y pagina los usuarios (no eliminados)
-        $users = User::paginate($perPage);
+        // Obtiene el parámetro de búsqueda (si existe) y realiza una búsqueda con LIKE
+        $searchQuery = $request->input('search');  // Usamos 'search' como parámetro de búsqueda
+
+        if ($searchQuery) {
+            // Si hay un parámetro de búsqueda, usamos el operador LIKE en la columna 'name'
+            $users = User::where('name', 'like', '%' . $searchQuery . '%')
+                ->paginate($perPage);
+        } else {
+            // Si no hay búsqueda, obtenemos los usuarios sin filtro
+            $users = User::paginate($perPage);
+        }
 
         // Mapea los usuarios para devolver solo los campos necesarios
         $usersFormatted = $users->getCollection()->map(function ($user) {
