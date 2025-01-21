@@ -38,8 +38,8 @@ El archivo `safeapi.sql` es un script de base de datos que puedes usar para crea
 
 ### 2. **Obtener información de todos los usuarios**
 - **Método**: `GET`
-- **Ruta**: `/api/infoall`
-- **Descripción**: Obtiene información de los usuarios (usando tokens de usuarios sin admin).
+- **Ruta**: `/api/infoall?search=juan&page=11`
+- **Descripción**: Obtiene información de los usuarios (usando tokens de usuarios sin admin). Si añades un valor al search como juan solo entregara valores similares si las dejas vacia funcionara como un ListarUsuarios comun, incluye paginacion que si esta vacio traera la primera pagina.
 - **Autenticación requerida**: Sí, necesita un Bearer Token.
 
 ### 3. **Obtener usuarios en la papelera**
