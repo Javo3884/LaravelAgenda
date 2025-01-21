@@ -29,16 +29,25 @@ class UserController extends Controller
         ]);
     }
 
-    // Buscar usuarios eliminados (Soft Deleted)
-    public function FindAllTrash()
+    public function FindAllTrash(Request $request)
     {
         // Definir cuántos usuarios por página
         $perPage = 10;  // Puedes hacer esto configurable si es necesario
 
-        // Obtener los usuarios eliminados (soft delete) y paginarlos
-        $users = User::onlyTrashed()->paginate($perPage);
+        // Obtener el parámetro de búsqueda (si existe) y realizar la búsqueda con LIKE
+        $searchQuery = $request->input('search');  // Usamos 'search' como parámetro de búsqueda
 
-        // Retornar los usuarios con la información de la paginación
+        if ($searchQuery) {
+            // Si hay un parámetro de búsqueda, usamos el operador LIKE en la columna 'name' de los usuarios eliminados
+            $users = User::onlyTrashed()
+                ->where('name', 'like', '%' . $searchQuery . '%')
+                ->paginate($perPage);
+        } else {
+            // Si no hay búsqueda, obtenemos los usuarios eliminados sin filtro
+            $users = User::onlyTrashed()->paginate($perPage);
+        }
+
+        // Devuelve los usuarios junto con la información de la paginación
         return response()->json([
             "success" => true,
             "users" => $users->items(),  // Los usuarios actuales de la página
